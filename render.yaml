@@ -12,7 +12,7 @@ services:
       - key: PORT
         value: 3000
       - key: GOOGLE_AI_API_KEY
-        sync: false # Bạn sẽ điền thủ công trên Dashboard Render
+        sync: false 
       - key: SUPABASE_URL
         sync: false
       - key: SUPABASE_ANON_KEY
