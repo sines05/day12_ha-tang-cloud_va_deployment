@@ -5,8 +5,8 @@ services:
     env: docker
     region: singapore
     plan: free
-    dockerContext: ./exam-worker
-    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerfilePath: ./exam-worker/Dockerfile
     healthCheckPath: /api/universities
     envVars:
       - key: PORT
@@ -26,8 +26,8 @@ services:
     env: docker
     region: singapore
     plan: free
-    dockerContext: ./vnu
-    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    dockerfilePath: ./vnu/Dockerfile
     envVars:
       - key: VITE_API_URL
         value: /api
