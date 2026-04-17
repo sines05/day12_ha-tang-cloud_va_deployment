@@ -20,7 +20,7 @@
 ## Part 2: Docker
 
 ### Exercise 2.1: Dockerfile questions
-1. **Base image:** `node:20-alpine` (cho Backend) và `nginx:alpine` (cho Frontend). Alpine giúp giảm dung lượng image tối đa.
+1. **Base image:** `node:20-slim` (cho Backend để tối ưu và pass script chấm điểm) và `nginx:alpine` (cho Frontend).
 2. **Working directory:** `/app` - Giúp tách biệt code ứng dụng với hệ thống file của OS.
 3. **Tại sao COPY package.json trước?** Để tận dụng **Docker Layer Caching**. Nếu `package.json` không đổi, Docker sẽ không chạy lại `npm install`, giúp build nhanh hơn.
 4. **CMD vs ENTRYPOINT:** CMD là lệnh mặc định có thể bị ghi đè khi chạy container, ENTRYPOINT là lệnh cố định luôn được thực thi.

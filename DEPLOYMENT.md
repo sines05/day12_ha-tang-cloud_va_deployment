@@ -31,6 +31,16 @@ curl https://document-sharing-frontend-thik.onrender.com/api/universities
 ```
 **Kết quả mong đợi:** Phản hồi giống hệt lệnh gọi trực tiếp vào Backend (chứng minh Gateway hoạt động).
 
+### 4. AI Agent (Ex 6.1)
+Kiểm tra tính năng hội thoại của AI Agent (với Auth):
+```bash
+curl -X POST https://document-sharing-backend.onrender.com/api/ask \
+  -H "X-API-Key: [YOUR_JWT_SECRET]" \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": "student_test", "question": "My name is Antigravity"}'
+```
+**Kết quả mong đợi:** AI nhận diện được tên và phản hồi 200 OK.
+
 ## Environment Variables Configuration
 Hệ thống yêu cầu các biến sau trên Render Dashboard:
 - `SUPABASE_URL` & `SUPABASE_ANON_KEY`: Kết nối cơ sở dữ liệu.
