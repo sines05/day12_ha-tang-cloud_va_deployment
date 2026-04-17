@@ -26,10 +26,12 @@ services:
     env: docker
     region: singapore
     plan: free
-    dockerContext: ./vnu
+    dockerContext: .
     dockerfilePath: ./vnu/Dockerfile
+    dockerBuildArgs:
+      - VITE_API_URL: https://document-sharing-backend.onrender.com
     envVars:
       - key: VITE_API_URL
-        value: /api
+        value: https://document-sharing-backend.onrender.com
       # Render cho phép các dịch vụ gọi nhau qua hostname nội bộ
       # Chúng ta cần cập nhật nginx.conf để trỏ tới hostname này
