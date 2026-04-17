@@ -29,9 +29,9 @@ services:
     dockerContext: .
     dockerfilePath: ./vnu/Dockerfile
     dockerBuildArgs:
-      - VITE_API_URL: https://document-sharing-backend.onrender.com
+      - VITE_API_URL=https://document-sharing-backend.onrender.com/api
     envVars:
       - key: VITE_API_URL
-        value: https://document-sharing-backend.onrender.com
+        value: https://document-sharing-backend.onrender.com/api
       # Render cho phép các dịch vụ gọi nhau qua hostname nội bộ
       # Chúng ta cần cập nhật nginx.conf để trỏ tới hostname này
