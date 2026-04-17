@@ -1,0 +1,35 @@
+services:
+  # 1. Dịch vụ Backend
+  - type: web
+    name: document-sharing-backend
+    env: docker
+    region: singapore
+    plan: free
+    dockerContext: ./exam-worker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/universities
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: GOOGLE_AI_API_KEY
+        sync: false # Bạn sẽ điền thủ công trên Dashboard Render
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  # 2. Dịch vụ Frontend (Đóng vai trò API Gateway)
+  - type: web
+    name: document-sharing-frontend
+    env: docker
+    region: singapore
+    plan: free
+    dockerContext: ./vnu
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VITE_API_URL
+        value: /api
+      # Render cho phép các dịch vụ gọi nhau qua hostname nội bộ
+      # Chúng ta cần cập nhật nginx.conf để trỏ tới hostname này
