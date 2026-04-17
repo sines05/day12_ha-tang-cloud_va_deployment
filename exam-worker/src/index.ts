@@ -36,11 +36,22 @@ const memoryStore = new Map<string, { count: number, resetTime: number }>();
 
 const createRateLimiter = (maxRequests: number, windowSeconds: number) => {
     return async (c: Context<{ Bindings: Env }>, next: Next) => {
-        const ip = c.req.header('cf-connecting-ip') || '127.0.0.1';
-        const now = Math.floor(Date.now() / 1000);
+        let identifier = c.req.header('cf-connecting-ip') || '127.0.0.1';
         
-        // Node.js Fallback Rate Limiter
-        const record = memoryStore.get(ip) || { count: 0, resetTime: now + windowSeconds };
+        // Nếu là request POST có user_id, dùng user_id làm định danh để không bị block chéo
+        if (c.req.method === 'POST') {
+            try {
+                const body = await c.req.raw.clone().json();
+                if (body && body.user_id) {
+                    identifier = body.user_id;
+                }
+            } catch (e) {
+                // Ignore parsing errors
+            }
+        }
+
+        const now = Math.floor(Date.now() / 1000);
+        const record = memoryStore.get(identifier) || { count: 0, resetTime: now + windowSeconds };
         
         if (now > record.resetTime) {
             record.count = 0;
