@@ -42,18 +42,18 @@ const createRateLimiter = (maxRequests: number, windowSeconds: number) => {
     return async (c: Context<{ Bindings: Env, Variables: Variables }>, next: Next) => {
         const identifier = c.get('userId') || c.req.header('cf-connecting-ip') || '127.0.0.1';
         const now = Math.floor(Date.now() / 1000);
-        
+
         const record = memoryStore.get(identifier) || { count: 0, resetTime: now + windowSeconds };
-        
+
         if (now > record.resetTime) {
             record.count = 0;
             record.resetTime = now + windowSeconds;
         }
-        
+
         if (record.count >= maxRequests) {
             return c.json({ error: `Too Many Requests. Try again in ${record.resetTime - now}s.` }, 429);
         }
-        
+
         record.count++;
         memoryStore.set(identifier, record);
         await next();
@@ -106,7 +106,7 @@ app.use('/api/ask', async (c, next) => {
                 c.set('userId', body.user_id);
                 (c as any).reqBody = body; // Lưu lại để dùng trong handler
             }
-        } catch (e) {}
+        } catch (e) { }
     }
     await next();
 });
@@ -139,7 +139,7 @@ app.post('/api/ask', createRateLimiter(10, 60), async (c) => {
 
     const history = chatHistory.get(user_id) || [];
     let answer = `I am your AI assistant.`;
-    
+
     if (question.toLowerCase().includes("name is")) {
         const name = question.split("is ")[1];
         history.push(name);

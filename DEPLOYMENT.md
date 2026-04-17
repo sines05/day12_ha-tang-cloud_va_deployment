@@ -47,3 +47,8 @@ Hệ thống yêu cầu các biến sau trên Render Dashboard:
 - `GOOGLE_AI_API_KEY`: Cho tính năng RAG Chatbot.
 - `JWT_SECRET`: Bảo mật link tải tài liệu.
 - `VITE_API_URL`: (Dùng cho Frontend) trỏ về URL Backend.
+
+## Screenshots Evidence
+- **Deployment Dashboard:** ![Dashboard](screenshots/dashboard.png)
+- **App Running:** ![Running](screenshots/running.png)
+- **Automated Test Results:** ![Test Results](screenshots/test.png)
