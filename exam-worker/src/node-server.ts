@@ -31,8 +31,26 @@ app.use('*', async (c, next) => {
 const port = 3000
 console.log(`🚀 Server is running on port ${port}`)
 
-serve({
+const server = serve({
   fetch: app.fetch,
   port,
   hostname: '0.0.0.0'
 })
+
+// --- GRACEFUL SHUTDOWN (Lab 12 Requirement) ---
+const shutdown = () => {
+  console.log('--- SIGTERM/SIGINT received: closing HTTP server ---')
+  server.close(() => {
+    console.log('--- HTTP server closed ---')
+    process.exit(0)
+  })
+  
+  // Nếu server không đóng sau 10s, ép buộc thoát
+  setTimeout(() => {
+    console.error('--- Could not close connections in time, forcefully shutting down ---')
+    process.exit(1)
+  }, 10000)
+}
+
+process.on('SIGTERM', shutdown)
+process.on('SIGINT', shutdown)
