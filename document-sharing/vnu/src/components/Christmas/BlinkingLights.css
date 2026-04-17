@@ -1,0 +1,21 @@
+@keyframes blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.light {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation-name: blink;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  box-shadow: 0 0 3px 1px rgba(255, 255, 255, 0.7);
+}
+
+.light.red { background-color: #ff5e5e; }
+.light.blue { background-color: #5e9cff; }
+.light.yellow { background-color: #ffdd5e; }
+.light.green { background-color: #5eff79; }

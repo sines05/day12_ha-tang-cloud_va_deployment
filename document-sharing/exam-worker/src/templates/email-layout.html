@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta name="supported-color-schemes" content="light dark">
+    <title>Email Layout Preview</title>
+    <!-- Tránh gmail lật màu lung tung -->
+    <style>
+        :root {
+            color-scheme: light dark;
+            supported-color-schemes: light dark;
+        }
+
+        /* Font chữ hệ thống giống NAB */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.5; /* Thu gọn giãn dòng */
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        /* Container chính */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Banner "Full-bleed" (Chiếm toàn bộ ô) */
+        .header-banner {
+            background-color: #ffffff !important;
+            padding: 0 !important;
+            /* Loại bỏ hoàn toàn khoảng trắng */
+            text-align: center;
+            line-height: 0;
+            /* Tránh các khoảng hở inline */
+        }
+
+        /* Logo trải dài hết viền */
+        .logo-img {
+            display: block;
+            width: 100%;
+            /* Chiếm toàn bộ chiều ngang 600px */
+            max-width: 600px;
+            height: auto;
+            border: 0;
+            outline: none;
+            text-decoration: none;
+            margin: 0;
+        }
+
+        /* Vùng nội dung */
+        .content-body {
+            padding: 25px 30px;
+            background-color: #ffffff;
+            font-size: 16px;
+            color: #1f2937;
+        }
+
+        .content-body p,
+        .content-body div,
+        .content-body h1,
+        .content-body h2,
+        .content-body h3,
+        .content-body h4,
+        .content-body h5,
+        .content-body h6 {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        /* Footer kiểu NAB */
+        .footer-section {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-top: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 13px;
+            text-align: center;
+            /* Căn giữa toàn bộ footer */
+        }
+
+        .footer-title {
+            color: #374151;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .footer-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .social-bar {
+            margin-top: 25px;
+            border-top: 1px solid #d1d5db;
+            padding-top: 15px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Fix Dark Mode Gmail Mobile */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #111827 !important;
+            }
+
+            .email-container {
+                background-color: #ffffff !important;
+            }
+
+            .header-banner {
+                background-color: #ffffff !important;
+            }
+
+            .content-body {
+                background-color: #ffffff !important;
+                color: #333333 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div style="background-color: #f3f4f6; padding: 0;">
+        <table class="email-container" width="600" align="center" border="0" cellpadding="0" cellspacing="0"
+            role="presentation" style="margin: 0 auto; background-color: #ffffff;">
+            <!-- HEADER -->
+            <tr>
+                <td class="header-banner"
+                    style="background-color: #ffffff; padding: 0 !important; text-align: center; line-height: 0;">
+                    <a href="https://vnudocshub.com" target="_blank" style="display: block; line-height: 0;">
+                        <img src="https://vnudocshub.com/mail_logo.png" alt="VNUdocs Hub" width="600" class="logo-img">
+                    </a>
+                </td>
+            </tr>
+
+            <!-- CONTENT -->
+            <tr>
+                <td class="content-body" style="padding: 25px 30px; background-color: #ffffff;">
+                    {{CONTENT}}
+                </td>
+            </tr>
+
+            <!-- FOOTER -->
+            <tr>
+                <td class="footer-section"
+                    style="background-color: #f8f9fa; padding: 30px; border-top: 1px solid #e5e7eb; text-align: center;">
+                    <div class="footer-title">VNUdocsHub - Nền tảng chia sẻ tài liệu ĐHQGHN</div>
+                    <div style="margin-bottom: 15px;">
+                        Hệ thống hỗ trợ học tập và chia sẻ kiến thức miễn phí cho cộng đồng sinh viên ĐHQGHN.
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <strong>Website:</strong> <a href="https://vnudocshub.com"
+                            class="footer-link">vnudocshub.com</a>
+                    </div>
+                    <div style="margin-bottom: 5px;">
+                        <strong>Hỗ trợ:</strong> <a href="mailto:contact@vnudocshub.com"
+                            class="footer-link">contact@vnudocshub.com</a>
+                    </div>
+                    <div class="social-bar">
+                        Bạn nhận được email này vì đây là thông báo quan trọng hoặc cập nhật từ hệ thống quản trị.<br>
+                        &copy; VNUdocsHub Team. All rights reserved.
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>

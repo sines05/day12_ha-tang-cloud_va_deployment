@@ -1,0 +1,5 @@
+{
+  "name": "VNU",
+  "description": "A simple, brutalist-style web application for sharing university documents from Vietnam National University (VNU).",
+  "requestFramePermissions": []
+}

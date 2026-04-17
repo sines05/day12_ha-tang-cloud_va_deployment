@@ -1,0 +1,42 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "exam-worker",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-10-31",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "RATE_LIMIT_STORE",
+			"id": "c967956d5cb84de3b4eae582124f76e1" // You'll need to create this KV namespace in Cloudflare and replace this with its ID
+		}
+	],
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "RATE_LIMITER",
+				"class_name": "RateLimiter"
+			},
+			{
+				"name": "UPLOAD_PROCESSOR",
+				"class_name": "UploadProcessor"
+			}
+		]
+	},
+	"migrations": [
+		{
+			"tag": "<v1>",
+			"new_sqlite_classes": [
+				"UploadProcessor"
+			]
+		}
+	],
+}

@@ -1,0 +1,30 @@
+wing: document_sharing
+rooms:
+- name: supabase
+  description: Files from supabase/
+  keywords:
+  - supabase
+  - supabase
+- name: exam_worker
+  description: Files from exam-worker/
+  keywords:
+  - exam_worker
+  - exam-worker
+- name: vnu
+  description: Files from vnu/
+  keywords:
+  - vnu
+  - vnu
+- name: testing
+  description: Files from test/
+  keywords:
+  - testing
+  - test
+- name: scripts
+  description: Files from scripts/
+  keywords:
+  - scripts
+  - scripts
+- name: general
+  description: Files that don't fit other rooms
+  keywords: []

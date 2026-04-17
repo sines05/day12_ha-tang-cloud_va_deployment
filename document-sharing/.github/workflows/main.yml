@@ -1,0 +1,67 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, cicd ]
+  pull_request:
+    branches: [ main, cicd ]
+
+jobs:
+  # 1. Job Kiểm tra (CI)
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # Kiểm tra Backend
+    - name: Validate Backend
+      run: |
+        cd exam-worker
+        npm install
+        npm run build --if-present
+
+    # Kiểm tra Frontend
+    - name: Validate Frontend
+      run: |
+        cd vnu
+        npm install
+        npm run build
+
+  # 2. Job Docker Build (Đảm bảo Dockerfile chạy tốt)
+  docker-check:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Backend Image (Dry Run)
+      uses: docker/build-push-action@v5
+      with:
+        context: ./exam-worker
+        push: false # Chỉ build thử, không push
+
+    - name: Build Frontend Image (Dry Run)
+      uses: docker/build-push-action@v5
+      with:
+        context: ./vnu
+        push: false
+
+  # 3. Job Deploy (CD) - Thông báo hoặc Kích hoạt Railway
+  deploy:
+    needs: docker-check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to Railway
+        run: |
+          echo "Railway is automatically deploying via GitHub Trigger..."
+          echo "CI checks passed. Deployment is safe."

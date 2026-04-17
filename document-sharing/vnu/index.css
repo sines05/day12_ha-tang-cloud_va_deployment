@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+ 
+html, body {
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* --- React Quill Style Overrides for consistent black border theme --- */
+.quill-editor-container .ql-toolbar,
+.quill-editor-container .ql-container {
+    border: 2px solid black !important;
+    border-radius: 0;
+}
+
+.quill-editor-container .ql-container {
+    border-top: 0 !important;
+}
+
+/* Make the entire editor area clickable by giving it a min-height */
+.ql-editor {
+    min-height: 150px;
+}
+
+/* Override Quill's dark code block to a light theme */
+.ql-syntax {
+  background-color: #f1f5f9; /* slate-100 */
+  color: #1e293b; /* slate-800 */
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  overflow-x: auto;
+}
+
+/* Fix mobile wrapping for Quill Toolbar */
+.ql-toolbar.ql-snow {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px;
+}
+.ql-toolbar.ql-snow .ql-formats {
+  margin-right: 0 !important;
+  margin-bottom: 0 !important;
+  display: flex;
+  flex-wrap: wrap;
+}
