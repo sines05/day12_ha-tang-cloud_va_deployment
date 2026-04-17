@@ -55,13 +55,13 @@ jobs:
         context: ./vnu
         push: false
 
-  # 3. Job Deploy (CD) - Thông báo hoặc Kích hoạt Railway
+
   deploy:
     needs: docker-check
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
-      - name: Deploy to Railway
+      - name: Deploy to Render
         run: |
-          echo "Railway is automatically deploying via GitHub Trigger..."
+          echo "Render is automatically deploying via GitHub Trigger..."
           echo "CI checks passed. Deployment is safe."

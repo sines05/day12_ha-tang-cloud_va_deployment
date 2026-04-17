@@ -4,6 +4,7 @@ export { RateLimiter } from './rate-limiter';
 export { UploadProcessor } from './upload-processor';
 
 import { Hono, Context, Next } from 'hono';
+import { serve } from '@hono/node-server';
 import { cors } from 'hono/cors';
 import { createClient } from '@supabase/supabase-js';
 import { getTelegramPartStream } from './stream-utils';
@@ -1121,6 +1122,15 @@ app.post('/api/ai/chat', async (c) => {
         console.error('AI Chat Error:', e.message);
         return c.json({ error: 'Không thể kết nối với AI vào lúc này.' }, 500);
     }
+});
+
+
+const port = 3000;
+console.log(`Server is running on port ${port}`);
+
+serve({
+  fetch: app.fetch,
+  port
 });
 
 export default app;
