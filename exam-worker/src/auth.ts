@@ -2,7 +2,7 @@
 // Using a simple HMAC signature for "tokens" to avoid heavy JWT libraries if not needed, 
 // OR use web crypto for standard JWT. 
 // Given this is a worker, let's use Web Crypto API for a standard HS256 JWT.
-
+//tesst
 // Encode helper
 function base64UrlEncode(text: string): string {
     const base64 = btoa(text);
