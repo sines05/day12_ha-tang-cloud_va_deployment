@@ -5,7 +5,7 @@ services:
     env: docker
     region: singapore
     plan: free
-    dockerContext: .
+    dockerContext: ./exam-worker
     dockerfilePath: ./exam-worker/Dockerfile
     healthCheckPath: /api/universities
     envVars:
@@ -26,7 +26,7 @@ services:
     env: docker
     region: singapore
     plan: free
-    dockerContext: .
+    dockerContext: ./vnu
     dockerfilePath: ./vnu/Dockerfile
     envVars:
       - key: VITE_API_URL
