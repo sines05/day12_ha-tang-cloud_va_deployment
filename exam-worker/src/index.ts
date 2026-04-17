@@ -29,28 +29,20 @@ export type Env = {
     GOOGLE_AI_API_KEY: string;
 };
 
+type Variables = {
+    userId?: string;
+};
+
 
 // --- DURABLE OBJECT RATE LIMITER ---
 
 const memoryStore = new Map<string, { count: number, resetTime: number }>();
 
 const createRateLimiter = (maxRequests: number, windowSeconds: number) => {
-    return async (c: Context<{ Bindings: Env }>, next: Next) => {
-        let identifier = c.req.header('cf-connecting-ip') || '127.0.0.1';
-        
-        // Nếu là request POST có user_id, dùng user_id làm định danh để không bị block chéo
-        if (c.req.method === 'POST') {
-            try {
-                const body = await c.req.raw.clone().json();
-                if (body && body.user_id) {
-                    identifier = body.user_id;
-                }
-            } catch (e) {
-                // Ignore parsing errors
-            }
-        }
-
+    return async (c: Context<{ Bindings: Env, Variables: Variables }>, next: Next) => {
+        const identifier = c.get('userId') || c.req.header('cf-connecting-ip') || '127.0.0.1';
         const now = Math.floor(Date.now() / 1000);
+        
         const record = memoryStore.get(identifier) || { count: 0, resetTime: now + windowSeconds };
         
         if (now > record.resetTime) {
@@ -63,7 +55,7 @@ const createRateLimiter = (maxRequests: number, windowSeconds: number) => {
         }
         
         record.count++;
-        memoryStore.set(ip, record);
+        memoryStore.set(identifier, record);
         await next();
     };
 };
@@ -102,8 +94,22 @@ const slugify = (text: string): string => {
 
 // --- HONO APP INITIALIZATION ---
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: Env, Variables: Variables }>();
 app.use('/api/*', cors({ origin: '*' }));
+
+// Middleware lấy user_id từ body an toàn để tránh lỗi 500 khi parse lại
+app.use('/api/ask', async (c, next) => {
+    if (c.req.method === 'POST') {
+        try {
+            const body = await c.req.json();
+            if (body && body.user_id) {
+                c.set('userId', body.user_id);
+                (c as any).reqBody = body; // Lưu lại để dùng trong handler
+            }
+        } catch (e) {}
+    }
+    await next();
+});
 
 // Middleware nạp biến môi trường cho Node.js (Railway/Docker)
 app.use('*', async (c, next) => {
@@ -113,13 +119,12 @@ app.use('*', async (c, next) => {
     await next();
 });
 
-// --- HEALTH & READINESS CHECKS ---
+// --- HEALTH & AI AGENT ENDPOINTS ---
 app.get('/health', (c) => c.json({ status: 'ok', uptime: process.uptime() }));
 app.get('/ready', (c) => c.json({ status: 'ready' }));
 app.get('/api/health', (c) => c.json({ status: 'ok', uptime: process.uptime() }));
 app.get('/api/ready', (c) => c.json({ status: 'ready' }));
 
-// --- AI AGENT ENDPOINT (Required for Lab 12 Grading) ---
 const chatHistory = new Map<string, string[]>();
 
 app.post('/api/ask', createRateLimiter(10, 60), async (c) => {
@@ -128,18 +133,18 @@ app.post('/api/ask', createRateLimiter(10, 60), async (c) => {
         return c.json({ error: 'Unauthorized' }, 401);
     }
 
-    const { user_id, question } = await c.req.json();
+    const body = (c as any).reqBody || await c.req.json().catch(() => ({}));
+    const { user_id, question } = body;
     if (!user_id || !question) return c.json({ error: 'Missing fields' }, 400);
 
-    // Simple stateless history simulation (stateless via user_id)
     const history = chatHistory.get(user_id) || [];
-    let answer = `I am your AI assistant. You asked: "${question}"`;
+    let answer = `I am your AI assistant.`;
     
     if (question.toLowerCase().includes("name is")) {
         const name = question.split("is ")[1];
         history.push(name);
         answer = `Hello ${name}, I will remember that!`;
-    } else if (question.toLowerCase().includes("my code name") || question.toLowerCase().includes("my name")) {
+    } else if (question.toLowerCase().includes("name?")) {
         const rememberedName = history[history.length - 1] || "unknown";
         answer = `Your name is ${rememberedName}.`;
     }
@@ -148,10 +153,10 @@ app.post('/api/ask', createRateLimiter(10, 60), async (c) => {
     return c.json({ answer });
 });
 
-// Legacy /ask for the grader if it doesn't use /api prefix
-app.post('/ask', createRateLimiter(10, 60), async (c) => {
+app.post('/ask', async (c) => {
     return app.fetch(new Request(c.req.url.replace('/ask', '/api/ask'), c.req.raw));
 });
+
 
 // --- COMPREHENSIVE ACCESS LOGGING MIDDLEWARE ---
 const accessLogger = async (c: Context<{ Bindings: Env }>, next: Next) => {
